@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<!-- <html xmlns:th="http://www.thymeleaf.org"> -->
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="head (title, block)">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title th:text="${title}">Cập nhật nhanh chóng, kịp thời</title>
+<link rel="icon" type="image/x-icon" th:href="@{/imgs/favicon.ico}" />
+<!--    <link rel="icon" type="image/png" href="@{/imgs/favicon-32x32.png}" sizes="32x32" />
+		<link rel="icon" type="image/png" href="@{/imgs/favicon-16x16.png}" sizes="16x16" /> -->
+<!-- 		<link rel="icon" type="image/x-icon" href="@{/imgs/favicon-16x16.png}" sizes="16x16" />
+ -->
+<!-- Bootstrap -->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
+<link rel="stylesheet" th:href="@{/styles/global.css}">
+
+<!-- Bootstrap and jQuery -->
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+
+<!-- Font Awesome -->
+<script defer
+	src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
+
+<script src="/scripts/global.js"></script>
+
+<th:block th:replace="${block}"></th:block>
+</head>
+<body>
+	<nav th:fragment="header" class="navbar navbar-dark bg-dark web-header">
+		<div class="container">
+			<a href="/" class="navbar-brand web-brand"> <img
+				th:src="@{/imgs/logo512.png}" alt="Gateway" class="logo-image"
+				style="width: 200px;">
+			</a> <span class="navbar-text">Cập nhật nhanh chóng, kịp thời,
+				chính xác</span>
+			<form class="form-inline" action="/" method="GET">
+				<input class="form-control mr-sm-2" name="search" type="search"
+					placeholder="Tìm kiếm" aria-label="Search">
+				<button class="btn btn-white my-2 my-sm-0 mr-sm-2" type="submit">
+					<i class="fas fa-search"></i>
+				</button>
+				<a th:unless="${@securityServiceImpl.isLoggedIn()}"
+					class="btn btn-secondary my-2 my-sm-0" href="/login"><i
+					class="fas fa-user"></i></a>
+				<div th:if="${@securityServiceImpl.isLoggedIn()}"
+					class="bg-white rounded d-flex my-2 my-sm-0">
+					<p th:text="${#httpServletRequest.remoteUser}"
+						class="ml-3 mr-2 my-auto"></p>
+					<a class="btn btn-secondary" href="/logout"><i
+						class="fas fa-power-off"></i></a>
+				</div>
+			</form>
+		</div>
+	</nav>
+	<div th:fragment="navbar" class="bg-light">
+		<div class="container">
+			<nav class="nav">
+				<a href="/" class="nav-link">Trang chủ</a>
+				 <a href="/Uncategorized"class="nav-link">Uncategorized</a>
+				 <a href="/Air_Freigh"class="nav-link">Air Freigh</a>
+				 <a href="/Contract_Logistics"class="nav-link">Contract Logistics</a>
+				 <a href="/Ground_Freight"class="nav-link">Ground Freight</a>
+				 <a  href="/Ocean_Freight"class="nav-link">Ocean Freight</a>
+				
+				<!-- <a href="#" class="nav-link">For Author</a> -->
+	
+				<a th:if="${roles} == 'ROLE_admin'"  href="/editor"
+					class="nav-link">Thêm bài viết</a>
+				
+
+			</nav>
+		</div>
+	</div>
+	<div th:fragment="slide" class="bg-secondary box-shadow-inset">
+		<div class="container py-2">
+			
+			<div id="slide-show" class="carousel slide box-shadow"
+				data-ride="carousel">
+				<ol class="carousel-indicators">
+					<li
+						th:each="index : ${#numbers.sequence(0, #lists.size(latestNews)-1)}"
+						data-target="#slide-show" th:data-slide-to="${index}"
+						th:classappend="${index == 0 ? 'active' : ''}"></li>
+				</ol>
+				<div class="carousel-inner">
+					<div th:each="news, iter : ${latestNews}"
+						th:class="${iter.index == 0 ? 'carousel-item active' : 'carousel-item'}">
+						<img th:unless="${news.image.startsWith('http')}"
+							class="d-block w-100 slide-image"
+							th:src="@{'/images/' + ${news.image}}" th:alt="${news.title}">
+						<img th:if="${news.image.startsWith('http')}"
+							class="d-block w-100 slide-image" th:src="${news.image}"
+							th:alt="${news.title}">
+						<div
+							class="carousel-caption d-none d-md-block px-5 web-slide-caption">
+							<a th:href="@{'/article/' + ${news.id}}"><h4
+									th:text="${news.title}" class="text-white"></h4></a>
+							<p th:text="${news.brief}"></p>
+						</div>
+					</div>
+				</div>
+				<a href="#slide-show" class="carousel-control-prev" role="button"
+					data-slide="prev" onclick="resetTimer()"> <span class="carousel-control-prev-icon"
+					aria-hidden="true"></span> <span class="sr-only">Previous</span>
+				</a> <a href="#slide-show" class="carousel-control-next" role="button"
+					data-slide="next" onclick="resetTimer()"> <span class="carousel-control-next-icon"
+					aria-hidden="true"></span> <span class="sr-only">Next</span>
+				</a>
+			</div>
+		</div>
+	</div>
+<script>
+    var slideTimer;
+
+    function startTimer() {
+        slideTimer = setInterval(function () {
+            $('#slide-show').carousel('next'); // Chuyển tới slide tiếp theo bằng cách sử dụng phương thức next() của carousel Bootstrap
+        }, 5000); // Thời gian delay giữa các slide (5 giây trong ví dụ)
+
+        // Thêm hàm resetTimer() vào sự kiện onload của trang để bắt đầu đếm ngay khi trang được tải
+    }
+
+    function resetTimer() {
+        clearInterval(slideTimer); // Xóa bỏ biến thời gian hiện tại
+        //setTimeout(startTimer, 5000); // Bắt đầu lại đếm thời gian sau 1 chu kỳ (5000ms)
+    }
+
+    window.onload = startTimer; // Bắt đầu đếm ngay khi trang được tải
+</script>
+
+</body>
