@@ -1,7 +1,16 @@
 package com.lyonguyen.news.controllers;
 
+import java.security.Principal;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +32,9 @@ public class AuthenticationController {
     
     @Autowired
     private UsersService usersService;
+    
+	@Autowired
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Value("${webapp.messages.loginfail}")
     private String loginFailedMessage;
@@ -42,9 +54,10 @@ public class AuthenticationController {
 
     @GetMapping("/login")
     public String login(Model model, String error, String logout,RedirectAttributes redirectAttributes) {
-    	
-    	String registration = (String) redirectAttributes.getFlashAttributes().get("registration");
-    	
+        
+        String registration = (String) redirectAttributes.getFlashAttributes().get("registration");
+       
+        
         if (securityService.isLoggedIn()) {   
             return "redirect:/";
         }
@@ -57,9 +70,12 @@ public class AuthenticationController {
         if (registration != null) {
             model.addAttribute("registration", registration);
         }
+      
 
         return "login";
     }
+
+
     
     @GetMapping("/register")
     public String showRegistrationForm(Model model) {
@@ -78,8 +94,43 @@ public class AuthenticationController {
         	model.addAttribute("passwordError", registerPasswordFailedMessage);
             return "register";
         }
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         usersService.save(user);
         redirectAttributes.addFlashAttribute("registration", registrationSuccess);
         return "redirect:/login";
     }
+    
+    @PostMapping("/submit_password_change")
+    public String changePassword(@RequestParam("oldPassword") String oldPassword,
+            @RequestParam("newPassword") String newPassword, @RequestParam("confirmPassword") String confirmPassword,
+            RedirectAttributes redirectAttributes, Principal principal) {
+
+        User currentUser = usersService.findByUsername(principal.getName());
+
+        
+        if (!bCryptPasswordEncoder.matches(oldPassword, currentUser.getPassword())) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Current password is incorrect.");
+            return "redirect:/";
+        }
+        
+//        if (!oldPassword.equals(currentUser.getPassword())) {
+//            redirectAttributes.addFlashAttribute("errorMessage", "Current password is incorrect.");
+//            return "redirect:/";
+//        }
+
+     
+     if (bCryptPasswordEncoder.matches(currentUser.getPassword(), confirmPassword)) {
+    	 redirectAttributes.addFlashAttribute("errorMessage", "New password and confirm password do not match.");
+         return "redirect:/";
+     }
+      
+
+        currentUser.setPassword(bCryptPasswordEncoder.encode(newPassword));
+        usersService.save(currentUser);
+        return "redirect:/logout";
+    }
+    
+   
+
+
 }

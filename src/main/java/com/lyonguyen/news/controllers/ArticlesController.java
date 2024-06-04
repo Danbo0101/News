@@ -36,7 +36,8 @@ public class ArticlesController {
     public ResponseEntity<?> createArticle(@RequestBody Article article) {
 
         Article savedArticle = articlesService.create(article);
-
+        
+        
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().replacePath("article").path("/{id}")
                 .buildAndExpand(savedArticle.getId()).toUri();
 

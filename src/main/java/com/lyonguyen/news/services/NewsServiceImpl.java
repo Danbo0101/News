@@ -1,6 +1,5 @@
 package com.lyonguyen.news.services;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import com.lyonguyen.news.enums.Subject;
 import com.lyonguyen.news.models.Article;
 import com.lyonguyen.news.models.News;
 import com.lyonguyen.news.models.NewsImpl;

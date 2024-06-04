@@ -87,18 +87,19 @@
         </div>
     </div>
 
-    <div th:fragment="newsfeed (newsStream, newsAside)" class="container web-content">
-        <h3 id="news" class="mt-lg-4 mt-3">Tin tức</h3>
-        <div class="row">
-            <div class="col-lg-8">
-                <div th:replace="::news-stream (${newsStream})"></div>
-            </div>
-            <div class="col-lg-4">
-                <div th:insert="::news-aside ('Tin nổi bật', ${newsAside})" class="mb-3"></div>
-                <div th:insert="::news-aside ('Tin mới nhất', ${newsAside})" class="mb-3"></div>
-            </div>
+    <div th:fragment="newsfeed (newsStream, newsAside, history)" class="container web-content">
+    <h3 id="news" class="mt-lg-4 mt-3" th:text="${history != null ? 'Lịch sử xem' : 'Tin tức'}"></h3>
+    <div class="row">
+        <div class="col-lg-8">
+            <div th:replace="::news-stream (${newsStream})"></div>
+        </div>
+        <div class="col-lg-4">
+            <div th:insert="::news-aside ('Tin nổi bật', ${newsAside})" class="mb-3"></div>
+            <div th:insert="::news-aside ('Tin mới nhất', ${newsAside})" class="mb-3"></div>
         </div>
     </div>
+</div>
+
 
     <div th:fragment="search (newsStream, newsAside)" class="container web-content">
         <h3 id="news" class="mt-lg-4 mt-3">Kết quả</h3>
