@@ -12,7 +12,7 @@ import com.lyonguyen.news.models.User;
 
 public interface HistoryService {
 
-	List<Article> getHistoryArticles(User user);
+//	List<Article> getHistoryArticles(User user);
 	
 	void addHistory(User user, Article article);
 	

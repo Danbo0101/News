@@ -12,9 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-
 import com.lyonguyen.news.bean.NoOpPasswordEncoder;
-
 
 @Configuration
 @EnableWebSecurity
@@ -22,8 +20,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserDetailsService userDetailsService;
-    
-
 
     @Bean
     @Override
@@ -35,9 +31,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
-    
+
     @Bean
-    public NoOpPasswordEncoder noEncoder(){
+    public NoOpPasswordEncoder noEncoder() {
         return new NoOpPasswordEncoder();
     }
 
@@ -45,37 +41,36 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                    .antMatchers("/", "/article/**", "/styles/**", "/scripts/**",
-                    		"/api/**","/images/**", "/imgs/**",
-                    		 "/Uncategorized", "/Air_Freigh",
-                     		"/Contract_Logistics","/Ground_Freight"
-                     		, "/Ocean_Freight"
-                    		).permitAll()
-                    .antMatchers("/editor/**").hasRole("admin") 
-                    .antMatchers("/register").permitAll() 
-                    .anyRequest().authenticated()
-                    //.anyRequest().permitAll()
+                .antMatchers("/", "/article/**", "/styles/**", "/scripts/**",
+                        "/api/**", "/images/**", "/imgs/**",
+                        "/News", "/Car",
+                        "/Sport", "/Education", "/Health")
+                .permitAll()
+                .antMatchers("/editor/**").hasRole("admin")
+                .antMatchers("/register").permitAll()
+                .anyRequest().authenticated()
+                // .anyRequest().permitAll()
 
-                    .and()
+                .and()
                 .formLogin()
-                    .loginPage("/login")
-                    .permitAll()
-                    .and()
+                .loginPage("/login")
+                .permitAll()
+                .and()
                 .logout()
-                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                    .logoutSuccessUrl("/login?logout")
-                    .permitAll()
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                .logoutSuccessUrl("/login?logout")
+                .permitAll()
                 .and().csrf().disable();
-        }
+    }
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
     }
-//    @Autowired
-//    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.userDetailsService(userDetailsService).passwordEncoder(noEncoder());
-//    }
-    
-  
+    // @Autowired
+    // public void configureGlobal(AuthenticationManagerBuilder auth) throws
+    // Exception {
+    // auth.userDetailsService(userDetailsService).passwordEncoder(noEncoder());
+    // }
+
 }

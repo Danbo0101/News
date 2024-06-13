@@ -4,12 +4,12 @@ public interface SecurityService {
 
     boolean isLoggedIn();
 
-    String findLoggedInUsername();
+    // String findLoggedInUsername();
 
-    void autologin(String username, String password);
-    
-//    boolean hasRole(String role);
-    
+    // void autologin(String username, String password);
+
+    // boolean hasRole(String role);
+
     String checkRole();
 
 }

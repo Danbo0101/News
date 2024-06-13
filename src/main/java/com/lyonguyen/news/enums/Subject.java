@@ -6,15 +6,15 @@ import java.util.List;
 import com.lyonguyen.news.bean.SubjectCV;
 
 public enum Subject {
-	Uncategorized,
-	Air_Freigh,
-	Contract_Logistics,
-	Ground_Freight,
-//	News,
-	Ocean_Freight;
-//	SCS_Management,
-//	Specialized_News,
-	
+	News,
+	Car,
+	Sport,
+	Education,
+	// News,
+	Health;
+	// SCS_Management,
+	// Specialized_News,
+
 	public static String[] getAllSubject() {
 		Subject[] values = Subject.values();
 		String[] subjects = new String[values.length];
@@ -24,8 +24,7 @@ public enum Subject {
 		}
 		return subjects;
 	}
-	
-	
+
 	public static String[] getAllSubjectWithSpace() {
 		Subject[] values = Subject.values();
 		String[] subjects = new String[values.length];
@@ -35,24 +34,23 @@ public enum Subject {
 		}
 		return subjects;
 	}
-	
+
 	public static List<SubjectCV> getAllSubjectCV() {
 		String[] subjectsSp = getAllSubjectWithSpace();
 		String[] subjects = getAllSubject();
 		List<SubjectCV> cv = new ArrayList<>();
 		for (int i = 0; i < subjects.length; i++) {
-			cv.add(new SubjectCV(subjects[i],subjectsSp[i]));
+			cv.add(new SubjectCV(subjects[i], subjectsSp[i]));
 		}
 		return cv;
 
-		
 	}
-	
+
 	public static String replace_(String s) {
 		return s.replace("_", " ");
 	}
-//	private static String replaceSp(String s) {
-//		return s.replace(" ", "_");
-//	}
+	// private static String replaceSp(String s) {
+	// return s.replace(" ", "_");
+	// }
 
 }

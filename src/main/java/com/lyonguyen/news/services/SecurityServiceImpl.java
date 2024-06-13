@@ -34,70 +34,68 @@ public class SecurityServiceImpl implements SecurityService {
                 && !(authentication instanceof AnonymousAuthenticationToken);
     }
 
-    @Override
-    public String findLoggedInUsername() {
-        Object userDetails = SecurityContextHolder.getContext().getAuthentication().getDetails();
-        if (userDetails instanceof UserDetails) {
-            return ((UserDetails)userDetails).getUsername();
-        }
+    // @Override
+    // public String findLoggedInUsername() {
+    // Object userDetails =
+    // SecurityContextHolder.getContext().getAuthentication().getDetails();
+    // if (userDetails instanceof UserDetails) {
+    // return ((UserDetails)userDetails).getUsername();
+    // }
 
-        return null;
-    }
+    // return null;
+    // }
 
-    @Override
-    public void autologin(String username, String password) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, password, userDetails.getAuthorities());
+    // @Override
+    // public void autologin(String username, String password) {
+    // UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+    // UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new
+    // UsernamePasswordAuthenticationToken(userDetails, password,
+    // userDetails.getAuthorities());
 
-        authenticationManager.authenticate(usernamePasswordAuthenticationToken);
+    // authenticationManager.authenticate(usernamePasswordAuthenticationToken);
 
-        if (usernamePasswordAuthenticationToken.isAuthenticated()) {
-            SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-            logger.debug(String.format("Auto login %s successfully!", username));
-        }
-    }
-    
-//    @Override
-//    public boolean hasRole(String role) {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
-//            return false;
-//        }
-//
-//        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-//        for (GrantedAuthority authority : authorities) {
-//            if (authority.getAuthority().equals(role)) {
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
-    
+    // if (usernamePasswordAuthenticationToken.isAuthenticated()) {
+    // SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+    // logger.debug(String.format("Auto login %s successfully!", username));
+    // }
+    // }
+
+    // @Override
+    // public boolean hasRole(String role) {
+    // Authentication authentication =
+    // SecurityContextHolder.getContext().getAuthentication();
+    // if (authentication == null || !authentication.isAuthenticated() ||
+    // authentication instanceof AnonymousAuthenticationToken) {
+    // return false;
+    // }
+    //
+    // Collection<? extends GrantedAuthority> authorities =
+    // authentication.getAuthorities();
+    // for (GrantedAuthority authority : authorities) {
+    // if (authority.getAuthority().equals(role)) {
+    // return true;
+    // }
+    // }
+    // return false;
+    // }
+
     @Override
     public String checkRole() {
-    	
-    	String role = "";
-    	
-    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    	
-    	if (authentication != null && authentication.isAuthenticated()) {
-		    Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-		    for (GrantedAuthority authority : authorities) {
-		    	System.out.println(authority.getAuthority());
-		    	role =authority.getAuthority();
-		       
-		    }
-		}
-    	
-    	return role;
-    	
+
+        String role = "";
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null && authentication.isAuthenticated()) {
+            Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+            for (GrantedAuthority authority : authorities) {
+                // System.out.println(authority.getAuthority());
+                role = authority.getAuthority();
+
+            }
+        }
+
+        return role;
+
     }
 }
-
-
-
-
-
-
-
-

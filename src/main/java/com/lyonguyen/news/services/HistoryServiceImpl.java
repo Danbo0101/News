@@ -36,20 +36,20 @@ public class HistoryServiceImpl implements HistoryService {
     private int pageSize;
 
 
-    @Override
-    public List<Article> getHistoryArticles(User user) {
-        // Lấy danh sách lịch sử của người dùng
-        List<History> userHistory = historyRepository.findByUser(user);
-        
-
-        // Lọc ra danh sách các bài viết từ danh sách lịch sử
-        List<Article> historyArticles = userHistory.stream()
-                .map(History::getArticle)
-                .collect(Collectors.toList());
-
-        return historyArticles;
-    }
-    
+//    @Override
+//    public List<Article> getHistoryArticles(User user) {
+//        // Lấy danh sách lịch sử của người dùng
+//        List<History> userHistory = historyRepository.findByUser(user);
+//        
+//
+//        // Lọc ra danh sách các bài viết từ danh sách lịch sử
+//        List<Article> historyArticles = userHistory.stream()
+//                .map(History::getArticle)
+//                .collect(Collectors.toList());
+//
+//        return historyArticles;
+//    }
+//    
     @Override
     public Page<News> getHistoryArticles(User user, int page) {
         // Lấy danh sách lịch sử của người dùng
